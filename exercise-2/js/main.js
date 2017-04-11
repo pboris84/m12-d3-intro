@@ -39,7 +39,7 @@ $(function() {
     var paragraphs = myDiv.selectAll('p').data(people2, function(d) {return d.name});
 
     // Determine which people are no longer represented in the data (`exit`), and transition their opacity to 0 and remove them.
-    paragraphs.exit().transition().duration(1000).style('opacity', 0).remove();
+    paragraphs.exit().transition().duration(1000).style('opacity', 0).remove();  //this is the transiation function
   }, 3000);
 
 });
