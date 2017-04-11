@@ -26,48 +26,68 @@ var exam3 = [
 // You'll have to wait for you page to load to assign events to the elements created in your index.html file
 $(function() {
   // Select SVG
+  var mySvg = d3.select('#my-svg').attr('height', 200);
 
   // Reusable draw function
-
-    // Bind data to selection of rects in your svg
-
-
-    // Enter rect elements
-
-
-    // Entering and updating elements rects
-
-
-    // Transition a remove for exiting elements
-
-
-    // Perform the same data-binding for text
-
+  var draw = function(data) {
+    // Bind data to svg
+    var rects = mySvg.selectAll('rect').data(data, function(d){return d.id});
 
     // enter elements
-
-
-    // Entering and updating elements rects
+    rects.enter()
+         .append('rect')
+         .attr('width', 0)
+         .attr('y', function(d){return d.id*40})
+         .attr('x', 20)
+         .attr('height', 30)
+         .merge(rects) // Entering and updating elements rects
+         .transition()
+         .duration(500)
+         .attr('width', function(d){return d.grade})
 
 
     // Transition a remove for exiting elements
-    $('button').on('click', function() {
-      var btn = $(this).attr("id");
-      switch(btn){
-        case 'exam-1':
-          draw(exam1);
-          break;
-        case 'exam-2':
-          draw(exam2);
-          break;
-        case 'exam-3':
-          draw(exam3);
-          break;
-        default:
-          break;
-      };
-    })
+    rects.exit()
+         .transition()
+         .duration(500)
+         .attr('width', 0)
+         .remove();
 
+    // Perform the same data-binding for text
+    var texts = mySvg.selectAll('text').data(data, function(d){return d.id});
 
+    // enter elements
+    texts.enter()
+         .append('text')
+         .merge(texts) // Entering and updating elements rects
+         .attr('y', function(d){return d.id*40 + 19})
+         .text(function(d){return d.student})
+         .style("fill", 'white')
+         .attr('x', 23);
 
+    // Transition a remove for exiting elements
+    texts.exit()
+         .transition()
+         .delay(500)
+         .remove();
+  };
+
+  // Assign a click event for buttons. Use switch/case to apply logic of which data to use.
+  $('button').on('click', function() {
+    var btn = $(this).attr("id");
+    console.log(btn, 'draw')
+    switch(btn){
+      case 'exam-1':
+        draw(exam1);
+        break;
+      case 'exam-2':
+        draw(exam2);
+        break;
+      case 'exam-3':
+        draw(exam3);
+        break;
+      default:
+        break;
+    };
+  })
 });
